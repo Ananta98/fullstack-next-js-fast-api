@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 type FieldsErrors = {
   [key: string]: string[];
@@ -38,26 +39,30 @@ export async function createCustomer(
     return { errors };
   }
 
-  try {
-    const cookiesToken = await cookies();
+  const cookiesToken = await cookies();
 
-    const isUpdate =
-      formData.get("id") !== undefined && formData.get("id") !== "";
+  const isUpdate =
+    formData.get("id") !== undefined && formData.get("id") !== "";
 
-    const url = isUpdate
-      ? "http://127.0.0.1:8000/customers/" + formData.get("id")
-      : "http://127.0.0.1:8000/customers";
+  const url = isUpdate
+    ? "http://127.0.0.1:8000/customers/" + formData.get("id")
+    : "http://127.0.0.1:8000/customers";
 
-    await fetch(url, {
-      method: isUpdate ? "PATCH" : "POST",
-      headers: {
-        Authorization: `Bearer ${cookiesToken.get("token")?.value}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(parse.data),
+  await fetch(url, {
+    method: isUpdate ? "PATCH" : "POST",
+    headers: {
+      Authorization: `Bearer ${cookiesToken.get("token")?.value}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(parse.data),
+  })
+    .then(() => {
+      revalidatePath("/dashboard/customer");
+    })
+    .catch(() => {
+      return { message: "Failed to create notes" };
+    })
+    .finally(() => {
+      redirect("/dashboard/customer");
     });
-    redirect("/dashboard");
-  } catch (error) {
-    return { message: "Failed to create product " + error };
-  }
 }
