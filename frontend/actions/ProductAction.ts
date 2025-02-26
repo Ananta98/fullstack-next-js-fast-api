@@ -44,8 +44,7 @@ export async function createProduct(
 
   const cookiesToken = await cookies();
 
-  const isUpdate =
-    formData.get("id") !== undefined && formData.get("id") !== "";
+  const isUpdate = formData.get("id") !== "" && formData.get("id") !== null;
 
   const url = isUpdate
     ? "http://127.0.0.1:8000/products/" + formData.get("id")

@@ -60,7 +60,7 @@ const CreateCustomer = () => {
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
-              <Label htmlFor="address">address</Label>
+              <Label htmlFor="address">Address</Label>
             </div>
             <Input id="address" name="address" type="text" />
             {state?.errors && typeof state.errors === "object" && (
