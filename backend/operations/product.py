@@ -66,9 +66,9 @@ def update_product(db: db_depedency, product_id: int, product: ProductRequest):
             db.commit()
             return {
                 'status' : 'success',
-                'message': f'product {product_id} deleted'
+                'message': f'product {product_id} updated'
             }
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'product with id {product_id} not found')
     except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error: {e}")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error update product: {e}")

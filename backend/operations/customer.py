@@ -70,7 +70,7 @@ def update_customer(db: db_depedency, customer_id: int, customer: CustomerReques
             db.commit()
             return {
                 'status' : 'success',
-                'message': f'product {customer_id} deleted'
+                'message': f'product {customer_id} updated'
             }
         else:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'customer with id {customer_id} not found')
